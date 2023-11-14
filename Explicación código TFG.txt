@@ -1,0 +1,137 @@
+import csv: Este módulo proporciona funcionalidades para leer y escribir archivos CSV (valores separados por comas). Permite trabajar con datos estructurados en forma de tablas, donde cada fila representa un registro y cada columna representa un campo.
+   
+import json: Este módulo proporciona funciones para trabajar con datos en formato JSON (JavaScript Object Notation). Permite leer y escribir datos JSON, así como manipular y analizar la estructura de los datos JSON.
+    
+import random: Este módulo proporciona funciones relacionadas con la generación de números aleatorios. Permite generar números aleatorios, seleccionar elementos aleatorios de una lista y realizar otras operaciones relacionadas con la aleatoriedad.
+    
+import openpyxl: Este módulo permite trabajar con archivos de Excel en formato XLSX. Proporciona funcionalidades para leer y escribir datos en hojas de cálculo de Excel, así como manipular la estructura y el formato de las hojas de cálculo.
+    
+from scipy.stats import skewnorm: Este import especifica que solo se desea importar la función skewnorm del módulo scipy.stats. scipy es una biblioteca ampliamente utilizada en Python para realizar cálculos científicos y matemáticos. La función skewnorm se utiliza para generar números aleatorios con una distribución asimétrica.
+
+from unidecode import unidecode: La función unidecode se utiliza para eliminar las diacríticas y convertir los caracteres unicode en sus equivalentes ASCII aproximados. Esto es útil cuando se trabaja con cadenas de texto que contienen caracteres especiales o acentos, y se desea obtener una representación más simple y compatible en ASCII. Esto se utilizará para que no haya problemas al exportar los datos en CSV, las tildes de las zonas geográficas se eliminarán y las 'ñ' se sustituirán por 'n'.
+
+La función obtener\_valores\_medios devuelve un diccionario de valores medios relacionados con un barrio específico. La función toma el nombre del barrio como argumento y busca en el diccionario valores\_medios el valor asociado a ese barrio. Este valor es un diccionario anidado que contiene información como el precio medio por metro cuadrado, probabilidades de características específicas del barrio y parámetros de una distribución estadística.
+
+La función llamada generar\_datos\_inmueble que genera datos aleatorios para un inmueble basado en los parámetros de entrada. A continuación, se explica el funcionamiento general de la función:
+
+Se inicializa una lista vacía llamada datos para almacenar los datos generados.
+
+Los parámetros de entrada distribucion se descomponen en tres variables separadas: a, loc y scale. Estos valores corresponden a los parámetros de una distribución de skewnorm.
+
+Se genera aleatoriamente el valor de los metros cuadrados del inmueble utilizando la función skewnorm.rvs del módulo scipy.stats. La función genera un valor aleatorio siguiendo la distribución de skewnorm con los parámetros a, loc y scale. El resultado se redondea a dos decimales y se almacena en la variable metros\_cuadrados.
+
+A partir de los metros cuadrados de la vivienda, se genera el número de habitaciones y el número de baños. Este número no es un número fijo en todos los rangos de metros cuadrados ya que en algunos rangos concretos, el resultado de número de habitaciones o baños puede variar en torno a una probabilidad concreta.
+
+Se generan al azar cuatro variables binarias (tiene\_terraza, tiene\_ascensor, tiene\_parking y esta\_amueblado) utilizando la función random.random(). Cada variable tiene una probabilidad de ser verdadera basada en los valores en la lista probabilidades\_caracteristicas.
+
+Se calcula el valor del inmueble multiplicando los metros cuadrados por el precio medio por metro cuadrado (metros\_cuadrados * precio\_medio\_m2). El resultado se redondea a dos decimales y se almacena en la variable valor\_inmueble.
+
+Si el inmueble tiene ciertas características (terraza, ascensor, parking o si está amueblado), se aplica un incremento al valor del inmueble utilizando la función random.uniform. Cada característica tiene un rango de incremento específico y se selecciona un valor aleatorio dentro de ese rango. El valor del inmueble se multiplica por (1 + incremento) para aplicar el incremento correspondiente.
+
+Los datos generados se agregan a la lista datos.
+
+Finalmente, la función devuelve la lista datos que contiene los datos generados para el inmueble.
+
+Preparación de un entorno para generar datos de viviendas en diferentes barrios:
+
+Se establece el valor de num\_viviendas en 1000, lo que indica que se generarán 1000 viviendas en total (se puede poner el número que se prefiera).
+
+Se crea una lista vacía llamada viviendas para almacenar los datos generados de las viviendas.
+
+Se crea un nuevo libro de Excel utilizando la biblioteca openpyxl y se asigna a la variable libro\_excel. Este libro de Excel se utilizará para almacenar los datos generados de las viviendas.
+
+Se obtienen los valores medios para el barrio "Zona Centro" llamando a la función obtener\_valores\_medios y se asignan a las variables correspondientes, como precio\_medio\_m2\_centro, probabilidades\_caracteristicas\_centro y distribucion\_centro. Estos valores medios se utilizan posteriormente para generar los datos de las viviendas en el barrio "Zona Centro".
+
+El proceso anterior se repite para cada uno de los barrios restantes.
+
+Estos valores medios se utilizarán posteriormente para generar los datos de las viviendas en cada uno de los barrios.
+
+Posteriormente, el código utiliza un bucle 'for' para generar datos de viviendas en base a diferentes características y distribuciones en diferentes barrios. Aquí está la explicación paso a paso:
+
+Se inicia un bucle 'for' que se repetirá num\_viviendas veces. num\_viviendas tiene un valor de 1000 en este caso.
+
+Dentro del bucle, se elige aleatoriamente un barrio de la lista proporcionada utilizando la función random.choice(). La lista contiene nombres de diferentes barrios.
+
+Luego, se utilizan declaraciones 'if' y 'elif' para verificar qué barrio se seleccionó y se ejecuta el bloque de código correspondiente.
+
+En cada bloque 'if', se llama a la función generar\_datos\_inmueble() con los parámetros correspondientes para ese barrio. Los parámetros incluyen el precio medio por metro cuadrado (precio\_medio\_m2) para ese barrio, las probabilidades de diferentes características (probabilidades\_caracteristicas), y la distribución de esas características (distribucion).
+
+Después de cada bloque 'if', se asignan los datos generados para esa vivienda al diccionario datos\_vivienda.
+
+Una vez que se completa el bucle 'for' y se generan los datos para todas las viviendas:
+
+La línea hoja\_calculo.append([barrio] + datos\_vivienda) agrega una nueva fila a la hoja de cálculo hoja\_calculo. La fila contiene el nombre del barrio y los datos de la vivienda generados anteriormente. barrio es el nombre del barrio seleccionado y datos\_vivienda es una lista que contiene diferentes características de la vivienda.
+
+La línea vivienda = {...} crea un diccionario llamado vivienda que contiene información específica sobre la vivienda. Los datos incluyen el nombre del barrio, los metros cuadrados, si tiene terraza, ascensor, parking, si está amueblada y el valor de la vivienda. Estos valores se extraen de barrio y datos\_vivienda.
+
+La línea viviendas.append(vivienda) agrega el diccionario vivienda a la lista viviendas. Esta lista almacena información de todas las viviendas generadas.
+
+Cambio de formatos para mejorar la legibilidad al exportar los datos:
+
+Después de completar el bucle 'for' principal que recorre todas las viviendas, se realiza un bucle adicional 'for' para cambiar el formato de las celdas en la columna "B" de la hoja de cálculo. Este bucle recorre todas las celdas en la columna "B" a partir de la segunda fila (hoja\_calculo["B"][1:]). 
+
+El objetivo de este bucle es cambiar el formato de las celdas en la columna "B" para que los valores de metros cuadrados se muestren sin decimales.
+
+Después de completar ese bucle, se realiza un bucle adicional 'for' con la variable 'cell' que recorre todas las celdas en la columna "I" de hoja\_calculo a partir de la segunda fila (hoja\_calculo["I"][1:]).
+
+Para cada celda en la columna "I", se establece el formato de número de la celda utilizando cell.number\_format. En este caso, se utiliza un formato concreto para que el número se formatee con separadores de miles y dos decimales, y se añadirá el símbolo del euro al final.
+
+Continuando con los cambios de formato, se crea un bucle 'for' recorre todas las columnas en la hoja de cálculo utilizando hoja\_calculo.columns.
+
+Dentro de este bucle, se inicializa la variable max\_length en 0, que se utilizará para almacenar la longitud máxima de los valores en la columna actual.
+
+Luego, se itera sobre cada celda en la columna actual utilizando el bucle for interno.
+En cada iteración, se intenta obtener el valor de la celda y se verifica su longitud utilizando len(str(cell.value)).
+
+Si la longitud del valor es mayor que el valor actual de max\_length, se actualiza max\_length con la nueva longitud.
+
+Después de recorrer todas las celdas en la columna, se calcula el ancho ajustado para la columna sumando 2 a max\_length.
+
+Finalmente, se establece el ancho ajustado para la columna actual utilizando hoja\_calculo.column\_dimensions[cell.column\_letter].width = adjusted\_width.
+
+Por último, en cuanto a cambios de formato previos a crear el archivo XLSX, el último bucle 'for' se utiliza para transformar los valores booleanos en las celdas de una hoja de cálculo. La transformación se realiza cambiando los valores booleanos por los textos "Sí" y "No" para que sea más simple visualmente saber si esa vivienda tiene esa característica concreta o no. 
+
+El bucle 'for' itera sobre todas las filas en la hoja de cálculo a partir de la segunda fila (min\_row=2) utilizando hoja\_calculo.iter\_rows().
+
+Dentro de este bucle, se recorre cada celda en la fila actual utilizando el bucle for interno.
+Se verifica si el valor de la celda es de tipo booleano utilizando isinstance(celda.value, bool).
+
+Si el valor es booleano, se actualiza el valor de la celda a "Sí" si es True o a "No" si es False.
+
+Una vez están realizados estos cambios de formato, se se crea una función para que el archivo de Excel se guarde con el nombre "datos\_viviendas\_xlsx.xlsx" en el directorio en el que esté el proyecto de Python.
+
+Exportación de datos a un archivo CSV y un archivo JSON:
+
+- La función exportar\_csv:
+
+Recibe dos parámetros: 'viviendas', que es la lista de viviendas generadas, y archivo\_csv, que es el nombre del archivo CSV en el que se guardarán los datos.
+
+En primer lugar, se abre el archivo CSV en modo escritura utilizando el comando open con el parámetro 'w'. Se utiliza newline='' para asegurar que no se inserten líneas en blanco entre las filas del archivo. Además, se especifica la codificación 'utf-8' para manejar correctamente los caracteres especiales.
+
+Se definen los nombres de los campos (columnas) que se utilizarán en el archivo CSV en la lista fieldnames.
+
+A continuación, se crea un objeto writer de csv.DictWriter, el cual se encarga de escribir los datos en formato CSV. Se le pasa el archivo CSV y los nombres de los campos.
+
+Se utiliza el método writeheader del objeto writer para escribir la fila de encabezado en el archivo CSV, que contiene los nombres de los campos.
+
+Dentro de un bucle, se recorre cada vivienda en la lista viviendas y se realizan las siguientes transformaciones:
+
+Se crea un nuevo diccionario vivienda\_transformed a partir de cada vivienda en la lista viviendas. Para cada clave-valor en la vivienda, se verifica si el valor es de tipo string utilizando la función isinstance(v, str). Si es así, se aplica la función unidecode() al valor para eliminar cualquier carácter especial o acentos. Si el valor no es de tipo string, se mantiene sin cambios. El diccionario resultante contiene los mismos pares clave-valor que la vivienda original, pero con los valores de tipo string transformados utilizando unidecode().
+
+Se crea otro diccionario vivienda\_rounded a partir del diccionario vivienda\_transformed. Se itera sobre cada clave-valor en el diccionario vivienda\_transformed y se verifica si el valor es de tipo float utilizando isinstance(v, float). Si es así, se redondea el valor a 2 decimales utilizando la función round(). Si el valor no es de tipo float, se mantiene sin cambios.
+
+Se realiza otra transformación en el diccionario vivienda\_rounded. Se itera sobre cada clave-valor en el diccionario vivienda\_rounded y se verifica si el valor es de tipo booleano utilizando isinstance(v, bool). Si es así, se convierte el valor en entero utilizando la función int(). Si el valor no es de tipo booleano, se mantiene sin cambios.
+
+Finalmente, se utiliza el objeto writer para escribir una línea en el archivo de salida con los valores transformados de la vivienda. El diccionario vivienda\_rounded contiene los valores modificados y redondeados de la vivienda, y se utiliza el método writerow() para escribir esta línea en el archivo.
+
+- La función exportar\_json:
+
+Recibe dos parámetros: viviendas, que es la lista de viviendas generadas, y archivo\_json, que es el nombre del archivo JSON en el que se guardarán los datos.
+
+Abre el archivo JSON utilizando el comando open en modo escritura ('w'). Se especifica la codificación 'utf-8' para manejar caracteres especiales correctamente.
+
+Crea una nueva lista viviendas\_formatted mediante una comprensión de lista que recorre cada vivienda en viviendas. En cada iteración, se crea una copia de la vivienda actual y se redondean los valores numéricos (de tipo float) a dos decimales utilizando la función round y una comprensión de diccionario.
+
+Utiliza la función json.dump para escribir los datos de viviendas\_formatted en el archivo JSON especificado por jsonfile. Se utiliza el parámetro ensure\_ascii=False para permitir caracteres no ASCII en el archivo y el parámetro indent=4 para agregar indentación y mejorar la legibilidad del JSON.
+
+Finalmente, se llama a las funciones exportar\_csv y exportar\_json pasando la lista de viviendas generadas y los nombres de los archivos CSV y JSON en los que se guardarán los datos. Esto generará los archivos correspondientes con los datos de las viviendas en los formatos CSV y JSON.
